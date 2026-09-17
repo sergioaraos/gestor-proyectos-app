@@ -1,3 +1,7 @@
 fastapi
 uvicorn[standard]
 jinja2
+# SERGIO 2026-09-17: dependencias para formulario y tests (feature/alta-proyectos)
+python-multipart
+pytest
+httpx
