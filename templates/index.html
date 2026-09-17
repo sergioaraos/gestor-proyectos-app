@@ -1,35 +1,34 @@
-<!-- SERGIO 2026-09-17: esqueleto inicial, tabla de proyectos -->
+<!-- SERGIO 2026-09-17: rediseno visual, grilla de tarjetas (feature/diseno-visual) -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Gestor de Proyectos</title>
-    <style>
-        body { font-family: sans-serif; margin: 2rem; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
-        th { background: #f0f0f0; }
-    </style>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Gestor de Proyectos</h1>
-    <!-- SERGIO 2026-09-17: link al formulario de alta (feature/alta-proyectos) -->
-    <p><a href="/nuevo">+ Nuevo proyecto</a></p>
-    <table>
-        <tr>
-            <th>Nombre</th><th>Cliente</th><th>Prioridad</th><th>Estado</th><th>Herramienta</th><th>Carpeta</th>
-        </tr>
+    <div class="topbar">
+        <h1>Gestor de Proyectos</h1>
+        <a class="btn" href="/nuevo">+ Nuevo proyecto</a>
+    </div>
+
+    {% if projects %}
+    <div class="grid">
         {% for p in projects %}
-        <tr>
-            <!-- SERGIO 2026-09-17: nombre ahora es link al detalle (feature/lectura-bitacoras) -->
-            <td><a href="/proyecto/{{ p.id }}">{{ p.nombre }}</a></td>
-            <td>{{ p.cliente }}</td>
-            <td>{{ p.prioridad }}</td>
-            <td>{{ p.estado }}</td>
-            <td>{{ p.herramienta }}</td>
-            <td>{{ p.carpeta }}</td>
-        </tr>
+        <div class="card">
+            <h2><a href="/proyecto/{{ p.id }}">{{ p.nombre }}</a></h2>
+            <div class="cliente">{{ p.cliente }}</div>
+            <div class="badges">
+                <span class="badge badge-prioridad-{{ p.prioridad }}">{{ p.prioridad }}</span>
+                <span class="badge badge-estado">{{ p.estado }}</span>
+                <span class="badge badge-herramienta">{{ p.herramienta }}</span>
+            </div>
+            <div class="carpeta">{{ p.carpeta }}</div>
+        </div>
         {% endfor %}
-    </table>
+    </div>
+    {% else %}
+    <p class="empty-state">Todavía no hay proyectos registrados.</p>
+    {% endif %}
 </body>
 </html>

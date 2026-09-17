@@ -2,12 +2,15 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import database
 import bitacoras
 
 app = FastAPI(title="Gestor de Proyectos")
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
+# SERGIO 2026-09-17: sirve el CSS del diseno visual (feature/diseno-visual)
+app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
 
 
 @app.on_event("startup")
