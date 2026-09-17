@@ -1,45 +1,42 @@
-<!-- SERGIO 2026-09-17: formulario de alta de proyectos (feature/alta-proyectos) -->
+<!-- SERGIO 2026-09-17: rediseno visual del formulario de alta (feature/diseno-visual) -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Nuevo proyecto</title>
-    <style>
-        body { font-family: sans-serif; margin: 2rem; max-width: 480px; }
-        label { display: block; margin-top: 1rem; font-weight: bold; }
-        input, select { width: 100%; padding: 0.4rem; margin-top: 0.25rem; box-sizing: border-box; }
-        button { margin-top: 1.5rem; padding: 0.5rem 1rem; }
-    </style>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Nuevo proyecto</h1>
-    <form method="post" action="/nuevo">
-        <label>Nombre</label>
-        <input type="text" name="nombre" required>
+    <div class="detail-container">
+        <a class="back-link" href="/">&larr; Volver al listado</a>
+        <h1>Nuevo proyecto</h1>
+        <form class="form-container" method="post" action="/nuevo">
+            <label>Nombre</label>
+            <input type="text" name="nombre" required>
 
-        <label>Cliente</label>
-        <input type="text" name="cliente">
+            <label>Cliente</label>
+            <input type="text" name="cliente">
 
-        <label>Prioridad</label>
-        <select name="prioridad">
-            <option value="alta">Alta</option>
-            <option value="media" selected>Media</option>
-            <option value="baja">Baja</option>
-        </select>
+            <label>Prioridad</label>
+            <select name="prioridad">
+                <option value="alta">Alta</option>
+                <option value="media" selected>Media</option>
+                <option value="baja">Baja</option>
+            </select>
 
-        <label>Carpeta (ruta completa en tu computador)</label>
-        <input type="text" name="carpeta" placeholder="C:\laragon\www\...">
+            <label>Carpeta (ruta completa en tu computador)</label>
+            <input type="text" name="carpeta" placeholder="C:\laragon\www\...">
 
-        <label>Herramienta</label>
-        <select name="herramienta">
-            <option value="Claude Code">Claude Code</option>
-            <option value="Cowork">Cowork</option>
-            <option value="Kiro">Kiro</option>
-            <option value="Otra">Otra</option>
-        </select>
+            <label>Herramienta</label>
+            <select name="herramienta">
+                <option value="Claude Code">Claude Code</option>
+                <option value="Cowork">Cowork</option>
+                <option value="Kiro">Kiro</option>
+                <option value="Otra">Otra</option>
+            </select>
 
-        <button type="submit">Crear proyecto</button>
-    </form>
-    <p><a href="/">Volver al listado</a></p>
+            <button class="btn" type="submit">Crear proyecto</button>
+        </form>
+    </div>
 </body>
 </html>
