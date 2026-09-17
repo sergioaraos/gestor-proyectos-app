@@ -26,6 +26,12 @@ def init_db():
     """)
     conn.commit()
 
+    # SERGIO 2026-09-18: migracion simple, agrega la columna si la base ya existia sin ella
+    columnas = [fila["name"] for fila in conn.execute("PRAGMA table_info(projects)").fetchall()]
+    if "ultima_actividad" not in columnas:
+        conn.execute("ALTER TABLE projects ADD COLUMN ultima_actividad TEXT")
+        conn.commit()
+
     existing = conn.execute("SELECT COUNT(*) as c FROM projects").fetchone()["c"]
     if existing == 0:
         conn.executemany(
