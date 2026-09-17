@@ -1,0 +1,32 @@
+<!-- SERGIO 2026-09-17: esqueleto inicial, tabla de proyectos -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Proyectos</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+        th { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>Gestor de Proyectos</h1>
+    <table>
+        <tr>
+            <th>Nombre</th><th>Cliente</th><th>Prioridad</th><th>Estado</th><th>Herramienta</th><th>Carpeta</th>
+        </tr>
+        {% for p in projects %}
+        <tr>
+            <td>{{ p.nombre }}</td>
+            <td>{{ p.cliente }}</td>
+            <td>{{ p.prioridad }}</td>
+            <td>{{ p.estado }}</td>
+            <td>{{ p.herramienta }}</td>
+            <td>{{ p.carpeta }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
