@@ -1,4 +1,5 @@
 # SERGIO 2026-09-17: esqueleto inicial, listado de proyectos leido desde SQLite
+import os
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
@@ -6,6 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import database
 import bitacoras
+import scheduler
+import config
 
 app = FastAPI(title="Gestor de Proyectos")
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
@@ -17,6 +20,16 @@ app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), na
 def on_startup():
     # Crea la tabla si no existe y precarga los proyectos iniciales la primera vez
     database.init_db()
+    # SERGIO 2026-09-18: arranca la actualizacion automatica (feature/actualizacion-automatica)
+    # Se desactiva bajo pytest para que las pruebas no dejen un hilo de fondo corriendo
+    if not os.environ.get("PYTEST_CURRENT_TEST"):
+        scheduler.iniciar_scheduler(config.REFRESH_INTERVAL_MINUTES)
+
+
+@app.on_event("shutdown")
+def on_shutdown():
+    # SERGIO 2026-09-18: detiene el scheduler al cerrar la app (feature/actualizacion-automatica)
+    scheduler.detener_scheduler()
 
 
 @app.get("/")

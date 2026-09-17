@@ -5,3 +5,5 @@ jinja2
 python-multipart
 pytest
 httpx
+# SERGIO 2026-09-18: actualizacion automatica en segundo plano (feature/actualizacion-automatica)
+apscheduler
