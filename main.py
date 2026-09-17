@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from pathlib import Path
 import database
+import bitacoras
 
 app = FastAPI(title="Gestor de Proyectos")
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
@@ -50,3 +51,19 @@ def crear_proyecto(
     conn.close()
     # Vuelve al listado para ver el proyecto recien creado
     return RedirectResponse(url="/", status_code=303)
+
+
+# SERGIO 2026-09-17: detalle de proyecto, lee su bitacora (feature/lectura-bitacoras)
+@app.get("/proyecto/{project_id}")
+def detalle_proyecto(request: Request, project_id: int):
+    # Muestra el detalle de un proyecto junto con lo que se lee de su bitacora
+    conn = database.get_connection()
+    proyecto = conn.execute("SELECT * FROM projects WHERE id = ?", (project_id,)).fetchone()
+    conn.close()
+
+    bitacora = bitacoras.leer_bitacora(proyecto["carpeta"]) if proyecto else None
+
+    status_code = 200 if proyecto else 404
+    return templates.TemplateResponse(
+        request, "detalle.html", {"proyecto": proyecto, "bitacora": bitacora}, status_code=status_code
+    )

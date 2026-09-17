@@ -1,0 +1,47 @@
+<!-- SERGIO 2026-09-17: pagina de detalle de proyecto, lee la bitacora (feature/lectura-bitacoras) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if proyecto %}{{ proyecto.nombre }}{% else %}Proyecto no encontrado{% endif %}</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; max-width: 700px; }
+        .meta { color: #555; margin-bottom: 1.5rem; }
+        .resumen { background: #f7f7f7; border: 1px solid #ddd; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; }
+        pre { white-space: pre-wrap; background: #fafafa; border: 1px solid #eee; padding: 1rem; }
+    </style>
+</head>
+<body>
+    {% if proyecto is none %}
+        <h1>Proyecto no encontrado</h1>
+    {% else %}
+        <h1>{{ proyecto.nombre }}</h1>
+        <p class="meta">
+            Cliente: {{ proyecto.cliente }} &middot;
+            Prioridad: {{ proyecto.prioridad }} &middot;
+            Estado: {{ proyecto.estado }} &middot;
+            Herramienta: {{ proyecto.herramienta }}<br>
+            Carpeta: {{ proyecto.carpeta }}
+        </p>
+
+        {% if bitacora is none %}
+            <p>No se encontró BITACORA.md en la carpeta de este proyecto.</p>
+        {% else %}
+            {% if bitacora.ultima_entrada %}
+                <div class="resumen">
+                    <strong>Última actividad:</strong> {{ bitacora.ultima_entrada.fecha_herramienta }}<br>
+                    <strong>Estado según bitácora:</strong> {{ bitacora.ultima_entrada.estado }}<br>
+                    <strong>Resumen:</strong> {{ bitacora.ultima_entrada.resumen }}<br>
+                    <strong>Pendientes:</strong> {{ bitacora.ultima_entrada.pendientes }}
+                </div>
+            {% else %}
+                <p>La bitácora existe pero todavía no tiene entradas.</p>
+            {% endif %}
+
+            <h2>Bitácora completa</h2>
+            <pre>{{ bitacora.contenido_completo }}</pre>
+        {% endif %}
+    {% endif %}
+    <p><a href="/">Volver al listado</a></p>
+</body>
+</html>

@@ -21,7 +21,8 @@
         </tr>
         {% for p in projects %}
         <tr>
-            <td>{{ p.nombre }}</td>
+            <!-- SERGIO 2026-09-17: nombre ahora es link al detalle (feature/lectura-bitacoras) -->
+            <td><a href="/proyecto/{{ p.id }}">{{ p.nombre }}</a></td>
             <td>{{ p.cliente }}</td>
             <td>{{ p.prioridad }}</td>
             <td>{{ p.estado }}</td>

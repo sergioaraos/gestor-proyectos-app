@@ -46,3 +46,44 @@ def test_crear_proyecto_lo_agrega_al_listado(client):
     )
     assert response.status_code == 200
     assert "Proyecto de prueba" in response.text
+
+
+# SERGIO 2026-09-17: prueba del detalle de proyecto (feature/lectura-bitacoras)
+def test_detalle_proyecto_muestra_bitacora(client, tmp_path):
+    import database
+
+    carpeta_proyecto = tmp_path / "proyecto_con_bitacora"
+    carpeta_proyecto.mkdir()
+    (carpeta_proyecto / "BITACORA.md").write_text(
+        "## 2026-09-17 10:00 — Cowork\n"
+        "Estado: en progreso\n"
+        "Resumen: prueba de deteccion de bitacora.\n"
+        "Pendientes: ninguno.\n",
+        encoding="utf-8",
+    )
+
+    client.post(
+        "/nuevo",
+        data={
+            "nombre": "Proyecto con bitacora",
+            "cliente": "Cliente test",
+            "prioridad": "alta",
+            "carpeta": str(carpeta_proyecto),
+            "herramienta": "Cowork",
+        },
+    )
+
+    conn = database.get_connection()
+    fila = conn.execute(
+        "SELECT id FROM projects WHERE nombre = ?", ("Proyecto con bitacora",)
+    ).fetchone()
+    conn.close()
+
+    response = client.get(f"/proyecto/{fila['id']}")
+    assert response.status_code == 200
+    assert "prueba de deteccion de bitacora" in response.text
+
+
+def test_detalle_proyecto_inexistente_devuelve_404(client):
+    response = client.get("/proyecto/9999")
+    assert response.status_code == 404
