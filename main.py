@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import database
 import bitacoras
+import git_info
 import scheduler
 import config
 
@@ -78,8 +79,13 @@ def detalle_proyecto(request: Request, project_id: int):
     conn.close()
 
     bitacora = bitacoras.leer_bitacora(proyecto["carpeta"]) if proyecto else None
+    # SERGIO 2026-09-18: info de git en vivo para el detalle (feature/integracion-git)
+    git = git_info.leer_git(proyecto["carpeta"]) if proyecto else None
 
     status_code = 200 if proyecto else 404
     return templates.TemplateResponse(
-        request, "detalle.html", {"proyecto": proyecto, "bitacora": bitacora}, status_code=status_code
+        request,
+        "detalle.html",
+        {"proyecto": proyecto, "bitacora": bitacora, "git": git},
+        status_code=status_code,
     )
