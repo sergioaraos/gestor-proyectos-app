@@ -39,7 +39,7 @@ def test_crear_proyecto_lo_agrega_al_listado(client):
             "nombre": "Proyecto de prueba",
             "cliente": "Cliente de prueba",
             "prioridad": "alta",
-            "carpeta": r"C:\laragon\www\proyecto-prueba",
+            "carpeta_nombre": "proyecto-prueba",
             "herramienta": "Cowork",
         },
         follow_redirects=True,
@@ -48,8 +48,33 @@ def test_crear_proyecto_lo_agrega_al_listado(client):
     assert "Proyecto de prueba" in response.text
 
 
+# SERGIO 2026-09-18: prueba del prefijo fijo de carpeta (feature/prefijo-carpeta)
+def test_crear_proyecto_arma_la_carpeta_con_el_prefijo(client, monkeypatch):
+    import config
+    monkeypatch.setattr(config, "RUTA_BASE_PROYECTOS", r"C:\laragon\www")
+
+    client.post(
+        "/nuevo",
+        data={
+            "nombre": "Proyecto con prefijo",
+            "prioridad": "media",
+            "carpeta_nombre": "mi-proyecto",
+            "herramienta": "Cowork",
+        },
+    )
+
+    import database
+    conn = database.get_connection()
+    fila = conn.execute(
+        "SELECT carpeta FROM projects WHERE nombre = ?", ("Proyecto con prefijo",)
+    ).fetchone()
+    conn.close()
+
+    assert fila["carpeta"] == r"C:\laragon\www\mi-proyecto"
+
+
 # SERGIO 2026-09-17: prueba del detalle de proyecto (feature/lectura-bitacoras)
-def test_detalle_proyecto_muestra_bitacora(client, tmp_path):
+def test_detalle_proyecto_muestra_bitacora(client, tmp_path, monkeypatch):
     import database
 
     carpeta_proyecto = tmp_path / "proyecto_con_bitacora"
@@ -62,13 +87,18 @@ def test_detalle_proyecto_muestra_bitacora(client, tmp_path):
         encoding="utf-8",
     )
 
+    # SERGIO 2026-09-18: se apunta la ruta base al tmp_path de la prueba, para poder
+    # seguir probando con una carpeta arbitraria pese al prefijo fijo (feature/prefijo-carpeta)
+    import config
+    monkeypatch.setattr(config, "RUTA_BASE_PROYECTOS", str(tmp_path))
+
     client.post(
         "/nuevo",
         data={
             "nombre": "Proyecto con bitacora",
             "cliente": "Cliente test",
             "prioridad": "alta",
-            "carpeta": str(carpeta_proyecto),
+            "carpeta_nombre": carpeta_proyecto.name,
             "herramienta": "Cowork",
         },
     )
