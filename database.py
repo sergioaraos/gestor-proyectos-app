@@ -35,6 +35,17 @@ def init_db():
         conn.execute("ALTER TABLE projects ADD COLUMN ultimo_commit TEXT")
         conn.commit()
 
+    # SERGIO 2026-09-18: columnas para el resumen generado por IA (feature/resumen-ollama)
+    if "resumen_ia" not in columnas:
+        conn.execute("ALTER TABLE projects ADD COLUMN resumen_ia TEXT")
+        conn.commit()
+    if "resumen_ia_corto" not in columnas:
+        conn.execute("ALTER TABLE projects ADD COLUMN resumen_ia_corto TEXT")
+        conn.commit()
+    if "bitacora_hash" not in columnas:
+        conn.execute("ALTER TABLE projects ADD COLUMN bitacora_hash TEXT")
+        conn.commit()
+
     existing = conn.execute("SELECT COUNT(*) as c FROM projects").fetchone()["c"]
     if existing == 0:
         conn.executemany(

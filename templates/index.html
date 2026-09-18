@@ -24,6 +24,10 @@
                 <span class="badge badge-herramienta">{{ p.herramienta }}</span>
             </div>
             <div class="carpeta">{{ p.carpeta }}</div>
+            <!-- SERGIO 2026-09-18: resumen de las ultimas tareas, generado por IA (Ollama) (feature/resumen-ollama) -->
+            {% if p.resumen_ia_corto %}
+            <div class="resumen-corto">{{ p.resumen_ia_corto }}</div>
+            {% endif %}
             <!-- SERGIO 2026-09-18: ultima actividad leida de la bitacora (feature/actualizacion-automatica) -->
             {% if p.ultima_actividad %}
             <div class="ultima-actividad">Última actividad: {{ p.ultima_actividad }}</div>

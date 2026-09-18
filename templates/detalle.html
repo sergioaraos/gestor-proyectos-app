@@ -21,6 +21,14 @@
             </div>
             <p class="cliente">Cliente: {{ proyecto.cliente }}<br>Carpeta: {{ proyecto.carpeta }}</p>
 
+            {% if proyecto.resumen_ia %}
+            <!-- SERGIO 2026-09-18: resumen generado por IA (Ollama) a partir de toda la bitacora (feature/resumen-ollama) -->
+            <dl class="resumen-box">
+                <dt>Resumen (IA)</dt>
+                <dd>{{ proyecto.resumen_ia }}</dd>
+            </dl>
+            {% endif %}
+
             {% if bitacora is none %}
                 <p class="empty-state">No se encontró BITACORA.md en la carpeta de este proyecto.</p>
             {% else %}
