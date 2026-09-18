@@ -14,8 +14,15 @@
             <label>Nombre</label>
             <input type="text" name="nombre" required>
 
+            <!-- SERGIO 2026-09-18: el cliente se elige de la lista en vez de escribirlo (feature/tabla-clientes) -->
             <label>Cliente</label>
-            <input type="text" name="cliente">
+            <select name="cliente">
+                <option value="">Sin cliente</option>
+                {% for c in clientes %}
+                <option value="{{ c.nombre }}">{{ c.nombre }}</option>
+                {% endfor %}
+            </select>
+            <p class="ayuda-form"><a href="/clientes">+ Agregar cliente nuevo</a></p>
 
             <label>Prioridad</label>
             <select name="prioridad">
