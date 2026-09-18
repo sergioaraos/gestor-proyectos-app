@@ -2,11 +2,16 @@
 import re
 from pathlib import Path
 
+# SERGIO 2026-09-18: cantidad de entradas recientes usadas para el resumen corto
+# de las tarjetas (feature/resumen-ollama)
+CANTIDAD_ENTRADAS_RECIENTES = 4
+
 
 def leer_bitacora(carpeta: str):
     """
     Busca BITACORA.md en la carpeta del proyecto y devuelve un diccionario
-    con el contenido completo y los datos de la ultima entrada.
+    con el contenido completo, los datos de la ultima entrada, y los bloques
+    crudos de las ultimas entradas (para el resumen corto via Ollama).
     Si la carpeta esta vacia o el archivo no existe, devuelve None.
     """
     if not carpeta:
@@ -24,6 +29,9 @@ def leer_bitacora(carpeta: str):
     return {
         "contenido_completo": contenido,
         "ultima_entrada": ultima_entrada,
+        # SERGIO 2026-09-18: bloques crudos de las ultimas entradas, en orden
+        # cronologico, para el resumen corto de las tarjetas (feature/resumen-ollama)
+        "ultimas_entradas_texto": entradas[-CANTIDAD_ENTRADAS_RECIENTES:],
     }
 
 

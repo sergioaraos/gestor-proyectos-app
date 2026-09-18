@@ -98,6 +98,8 @@ a:hover { text-decoration: underline; }
 .card .cliente { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem; }
 .card .carpeta { color: var(--text-muted); font-size: 0.75rem; margin-top: 0.75rem; word-break: break-all; }
 .card .ultima-actividad { color: var(--text-muted); font-size: 0.75rem; margin-top: 0.4rem; }
+/* SERGIO 2026-09-18: resumen corto generado por IA en las tarjetas (feature/resumen-ollama) */
+.card .resumen-corto { color: var(--text); font-size: 0.82rem; margin-top: 0.6rem; line-height: 1.4; }
 
 .badges { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 
