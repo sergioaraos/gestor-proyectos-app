@@ -1,5 +1,6 @@
 # SERGIO 2026-09-17: esqueleto inicial, listado de proyectos leido desde SQLite
 import os
+import sqlite3
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
@@ -47,7 +48,68 @@ def index(request: Request):
 def nuevo_proyecto_form(request: Request):
     # Muestra el formulario vacio para dar de alta un proyecto nuevo
     # SERGIO 2026-09-18: se pasa la ruta base para mostrarla como prefijo fijo (feature/prefijo-carpeta)
-    return templates.TemplateResponse(request, "nuevo.html", {"ruta_base": config.RUTA_BASE_PROYECTOS})
+    # SERGIO 2026-09-18: se pasa la lista de clientes para el desplegable (feature/tabla-clientes)
+    conn = database.get_connection()
+    clientes = conn.execute("SELECT * FROM clientes ORDER BY nombre").fetchall()
+    conn.close()
+    return templates.TemplateResponse(
+        request, "nuevo.html", {"ruta_base": config.RUTA_BASE_PROYECTOS, "clientes": clientes}
+    )
+
+
+# SERGIO 2026-09-18: alta y listado de clientes (feature/tabla-clientes)
+@app.get("/clientes")
+def listado_clientes(request: Request):
+    # Muestra los clientes ya registrados y el formulario para agregar uno nuevo
+    conn = database.get_connection()
+    clientes = conn.execute("SELECT * FROM clientes ORDER BY nombre").fetchall()
+    conn.close()
+    return templates.TemplateResponse(request, "clientes.html", {"clientes": clientes})
+
+
+@app.post("/clientes")
+def crear_cliente(nombre: str = Form(...)):
+    # Agrega un cliente nuevo; si el nombre ya existe, no hace nada (UNIQUE en la tabla)
+    nombre = nombre.strip()
+    if nombre:
+        conn = database.get_connection()
+        conn.execute("INSERT OR IGNORE INTO clientes (nombre) VALUES (?)", (nombre,))
+        conn.commit()
+        conn.close()
+    return RedirectResponse(url="/clientes", status_code=303)
+
+
+@app.post("/clientes/{cliente_id}/editar")
+def editar_cliente(cliente_id: int, nombre: str = Form(...)):
+    # SERGIO 2026-09-18: renombra un cliente y actualiza en cascada los proyectos que ya
+    # lo tenian asignado (guardado como texto), para que no queden desincronizados
+    # (feature/tabla-clientes)
+    nombre = nombre.strip()
+    if nombre:
+        conn = database.get_connection()
+        anterior = conn.execute("SELECT nombre FROM clientes WHERE id = ?", (cliente_id,)).fetchone()
+        if anterior and anterior["nombre"] != nombre:
+            try:
+                conn.execute("UPDATE clientes SET nombre = ? WHERE id = ?", (nombre, cliente_id))
+                conn.execute("UPDATE projects SET cliente = ? WHERE cliente = ?", (nombre, anterior["nombre"]))
+                conn.commit()
+            except sqlite3.IntegrityError:
+                # Ya existe otro cliente con ese nombre (UNIQUE): se ignora el cambio
+                conn.rollback()
+        conn.close()
+    return RedirectResponse(url="/clientes", status_code=303)
+
+
+@app.post("/clientes/{cliente_id}/eliminar")
+def eliminar_cliente(cliente_id: int):
+    # SERGIO 2026-09-18: borra el cliente de la lista. Los proyectos que ya lo tenian
+    # asignado no se tocan, solo deja de estar disponible para proyectos nuevos
+    # (feature/tabla-clientes)
+    conn = database.get_connection()
+    conn.execute("DELETE FROM clientes WHERE id = ?", (cliente_id,))
+    conn.commit()
+    conn.close()
+    return RedirectResponse(url="/clientes", status_code=303)
 
 
 @app.post("/nuevo")

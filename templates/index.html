@@ -9,7 +9,11 @@
 <body>
     <div class="topbar">
         <h1>Gestor de Proyectos</h1>
-        <a class="btn" href="/nuevo">+ Nuevo proyecto</a>
+        <!-- SERGIO 2026-09-18: acceso a la pagina de clientes (feature/tabla-clientes) -->
+        <div class="topbar-acciones">
+            <a class="btn btn-secundario" href="/clientes">Clientes</a>
+            <a class="btn" href="/nuevo">+ Nuevo proyecto</a>
+        </div>
     </div>
 
     {% if projects %}

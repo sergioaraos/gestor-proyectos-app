@@ -46,6 +46,25 @@ def init_db():
         conn.execute("ALTER TABLE projects ADD COLUMN bitacora_hash TEXT")
         conn.commit()
 
+    # SERGIO 2026-09-18: tabla de clientes, para elegirlos desde una lista al crear
+    # un proyecto en vez de escribirlos a mano (feature/tabla-clientes)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS clientes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL UNIQUE
+        )
+    """)
+    conn.commit()
+
+    # SERGIO 2026-09-18: migra los nombres de cliente ya escritos en proyectos existentes,
+    # para no perder lo que ya se habia cargado a mano (feature/tabla-clientes)
+    clientes_existentes = conn.execute(
+        "SELECT DISTINCT cliente FROM projects WHERE cliente IS NOT NULL AND TRIM(cliente) != ''"
+    ).fetchall()
+    for fila in clientes_existentes:
+        conn.execute("INSERT OR IGNORE INTO clientes (nombre) VALUES (?)", (fila["cliente"].strip(),))
+    conn.commit()
+
     existing = conn.execute("SELECT COUNT(*) as c FROM projects").fetchone()["c"]
     if existing == 0:
         conn.executemany(

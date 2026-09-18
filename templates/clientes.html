@@ -1,0 +1,40 @@
+<!-- SERGIO 2026-09-18: pagina de clientes (feature/tabla-clientes) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="detail-container">
+        <a class="back-link" href="/">&larr; Volver al listado</a>
+        <h1>Clientes</h1>
+
+        <form class="form-container" method="post" action="/clientes">
+            <label>Nombre del cliente nuevo</label>
+            <input type="text" name="nombre" required>
+            <button class="btn" type="submit">Agregar cliente</button>
+        </form>
+
+        {% if clientes %}
+        <!-- SERGIO 2026-09-18: editar y eliminar clientes (feature/tabla-clientes) -->
+        <ul class="clientes-lista">
+            {% for c in clientes %}
+            <li class="cliente-item">
+                <form method="post" action="/clientes/{{ c.id }}/editar" class="cliente-editar">
+                    <input type="text" name="nombre" value="{{ c.nombre }}" required>
+                    <button class="btn btn-secundario" type="submit">Guardar</button>
+                </form>
+                <form method="post" action="/clientes/{{ c.id }}/eliminar" class="cliente-eliminar">
+                    <button class="btn btn-peligro" type="submit">Eliminar</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="empty-state">Todavía no hay clientes registrados.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

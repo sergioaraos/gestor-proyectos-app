@@ -76,6 +76,10 @@ a:hover { text-decoration: underline; }
 }
 .btn:hover { opacity: 0.9; text-decoration: none; }
 
+/* SERGIO 2026-09-18: botones secundarios y acciones de la barra superior (feature/tabla-clientes) */
+.topbar-acciones { display: flex; gap: 0.6rem; }
+.btn-secundario { background: transparent; color: var(--text); border: 1px solid var(--border); }
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -177,3 +181,22 @@ a:hover { text-decoration: underline; }
 .carpeta-input input { margin-top: 0; }
 
 .empty-state { color: var(--text-muted); text-align: center; padding: 3rem 1rem; }
+
+/* SERGIO 2026-09-18: pagina de clientes (feature/tabla-clientes) */
+.clientes-lista { list-style: none; padding: 0; margin: 1.5rem 0 0 0; }
+.clientes-lista li.cliente-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.ayuda-form { margin-top: 0.4rem; font-size: 0.85rem; }
+
+/* SERGIO 2026-09-18: editar y eliminar clientes (feature/tabla-clientes) */
+.cliente-editar { display: flex; gap: 0.4rem; flex: 1; }
+.cliente-editar input { flex: 1; padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.btn-peligro { background: var(--danger); color: #fff; }
