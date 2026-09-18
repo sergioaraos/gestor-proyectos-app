@@ -28,6 +28,10 @@
             {% if p.ultima_actividad %}
             <div class="ultima-actividad">Última actividad: {{ p.ultima_actividad }}</div>
             {% endif %}
+            <!-- SERGIO 2026-09-18: ultimo commit de git (feature/integracion-git) -->
+            {% if p.ultimo_commit %}
+            <div class="ultima-actividad">Último commit: {{ p.ultimo_commit }}</div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

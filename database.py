@@ -31,6 +31,9 @@ def init_db():
     if "ultima_actividad" not in columnas:
         conn.execute("ALTER TABLE projects ADD COLUMN ultima_actividad TEXT")
         conn.commit()
+    if "ultimo_commit" not in columnas:
+        conn.execute("ALTER TABLE projects ADD COLUMN ultimo_commit TEXT")
+        conn.commit()
 
     existing = conn.execute("SELECT COUNT(*) as c FROM projects").fetchone()["c"]
     if existing == 0:
