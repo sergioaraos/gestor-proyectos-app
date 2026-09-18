@@ -171,4 +171,9 @@ a:hover { text-decoration: underline; }
 .form-container input:focus, .form-container select:focus { outline: none; border-color: var(--accent); }
 .form-container button { margin-top: 1.5rem; width: 100%; }
 
+/* SERGIO 2026-09-18: prefijo fijo de carpeta junto al input (feature/prefijo-carpeta) */
+.carpeta-input { display: flex; align-items: center; gap: 0.3rem; margin-top: 0.3rem; }
+.carpeta-input .carpeta-prefijo { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; }
+.carpeta-input input { margin-top: 0; }
+
 .empty-state { color: var(--text-muted); text-align: center; padding: 3rem 1rem; }

@@ -46,7 +46,8 @@ def index(request: Request):
 @app.get("/nuevo")
 def nuevo_proyecto_form(request: Request):
     # Muestra el formulario vacio para dar de alta un proyecto nuevo
-    return templates.TemplateResponse(request, "nuevo.html", {})
+    # SERGIO 2026-09-18: se pasa la ruta base para mostrarla como prefijo fijo (feature/prefijo-carpeta)
+    return templates.TemplateResponse(request, "nuevo.html", {"ruta_base": config.RUTA_BASE_PROYECTOS})
 
 
 @app.post("/nuevo")
@@ -54,9 +55,15 @@ def crear_proyecto(
     nombre: str = Form(...),
     cliente: str = Form(""),
     prioridad: str = Form("media"),
-    carpeta: str = Form(""),
+    carpeta_nombre: str = Form(""),
     herramienta: str = Form(""),
 ):
+    # SERGIO 2026-09-18: la carpeta se arma con el prefijo fijo (RUTA_BASE_PROYECTOS) mas
+    # el nombre que ingresa el usuario, ya que todos los proyectos viven en la misma
+    # ubicacion (feature/prefijo-carpeta)
+    carpeta_nombre = carpeta_nombre.strip().strip("\\/")
+    carpeta = str(Path(config.RUTA_BASE_PROYECTOS) / carpeta_nombre) if carpeta_nombre else ""
+
     # Inserta el proyecto con estado "activo" y fecha de inicio de hoy por defecto
     conn = database.get_connection()
     conn.execute(

@@ -24,8 +24,12 @@
                 <option value="baja">Baja</option>
             </select>
 
-            <label>Carpeta (ruta completa en tu computador)</label>
-            <input type="text" name="carpeta" placeholder="C:\laragon\www\...">
+            <!-- SERGIO 2026-09-18: prefijo de carpeta fijo, solo se pide el nombre final (feature/prefijo-carpeta) -->
+            <label>Carpeta</label>
+            <div class="carpeta-input">
+                <span class="carpeta-prefijo">{{ ruta_base }}\</span>
+                <input type="text" name="carpeta_nombre" placeholder="nombre-del-proyecto">
+            </div>
 
             <label>Herramienta</label>
             <select name="herramienta">
